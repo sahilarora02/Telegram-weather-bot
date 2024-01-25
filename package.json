@@ -1,0 +1,24 @@
+{
+  "name": "weather-telegram-bot",
+  "version": "1.0.0",
+  "description": "A telegram bot for daily weather update",
+  "main": "index.js",
+  
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "keywords": [
+    "weather",
+    "telegram",
+    "updates"
+  ],
+  "author": "sahil arora",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^16.4.1",
+    "node-telegram-bot-api": "^0.64.0",
+    "nodemon": "^3.0.3",
+    "weather-emoji": "^1.2.0"
+  }
+}
