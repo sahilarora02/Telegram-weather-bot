@@ -45,7 +45,6 @@ bot.on("message", (msg) => {
     selectedState = state
 
     GiveWeatherDetails(chatId, selectedState);
-    // Handle the selected state accordingly
   } else {
     bot.sendMessage(chatId, "Nope");
   }
@@ -107,7 +106,7 @@ async function getWeatherFact() {
 }
 
 async function GetEmoji(place) {
-  const weatherEmoji = new WeatherEmoji("19d99615dedd4a22f13aced248d8ee2c");
+  const weatherEmoji = new WeatherEmoji(process.env.SECRET_KEY);
   const emojiNewYork = await weatherEmoji.getWeather(place, true);
   return emojiNewYork.emoji;
 }
