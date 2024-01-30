@@ -9,7 +9,7 @@ const DeveloperDetail_Question = "Who is my coder? click on /developer";
 const bot = new TelegramBot(token, { polling: true });
 const states = [
   "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
-  "Chhattisgarh", "Goa", "Gujarat", "Haryana",
+  "Chhattisgarh" , "Delhi", "Goa", "Gujarat", "Haryana",
   "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
   "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
   "Mizoram", "Nagaland", "Odisha", "Punjab",
@@ -26,7 +26,8 @@ bot.on("message", (msg) => {
       `Welcome to the Xoxo weather bot! You can subscribe for daily weather updates by typing /subscribe. and ${DeveloperDetail_Question}`
     );
   } else if (msgText === "/subscribe") {
-    GiveWeatherDetails(chatId, selectedState);
+    // GiveWeatherDetails(chatId, selectedState);
+    showStateKeyboard(chatId);
   } else if (msgText.includes("/developer")) {
     bot.sendMessage(chatId, "I was developed by Sahil Arora");
   } else if (msgText === "/fact") {
@@ -37,9 +38,7 @@ bot.on("message", (msg) => {
         console.log("Failed to fetch a weather fact.");
       }
     });
-  } else if (msgText === "/choose_state") {
-    showStateKeyboard(chatId);
-  } else if (states.includes(msgText)) {
+  }else if (states.includes(msgText)) {
     const state = msgText;
     console.log("Received state command:", state);
     selectedState = state
