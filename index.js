@@ -1,38 +1,71 @@
 const TelegramBot = require("node-telegram-bot-api");
-// const WeatherEmoji = require('weather-emoji').default;
+const WeatherEmoji = require("weather-emoji");
+
 require("dotenv").config();
 const token = process.env.TELEGRAM_TOKEN;
 const weatherKey = process.env.WEATHER_API_KEY;
-
-const DeveloperDetail_Question = 'Who is my coder? click on /developer'
-
+let selectedState = 'New Delhi';
+const DeveloperDetail_Question = "Who is my coder? click on /developer";
 const bot = new TelegramBot(token, { polling: true });
+const states = [
+  "Andhra Pradesh", "Arunachal Pradesh", "Assam", "Bihar",
+  "Chhattisgarh", "Goa", "Gujarat", "Haryana",
+  "Himachal Pradesh", "Jharkhand", "Karnataka", "Kerala",
+  "Madhya Pradesh", "Maharashtra", "Manipur", "Meghalaya",
+  "Mizoram", "Nagaland", "Odisha", "Punjab",
+  "Rajasthan", "Sikkim", "Tamil Nadu", "Telangana",
+  "Tripura", "Uttar Pradesh", "Uttarakhand", "West Bengal"
+];
 bot.on("message", (msg) => {
   const chatId = msg.chat.id;
   const msgText = msg.text;
+  
   if (msgText === "/start") {
     bot.sendMessage(
       chatId,
       `Welcome to the Xoxo weather bot! You can subscribe for daily weather updates by typing /subscribe. and ${DeveloperDetail_Question}`
     );
   } else if (msgText === "/subscribe") {
-    // const weatherEmoji = new WeatherEmoji(weatherKey);
-    // const emojiT = weatherEmoji.getWeather("paris", true).then(data => data);
-    // console.log(emojiT)
-    GiveWeatherDetails(chatId);
-  } else if(msgText.includes('/developer')) {
-      bot.sendMessage(chatId, "I was developer by Sahil Arora")
-  }else{
+    GiveWeatherDetails(chatId, selectedState);
+  } else if (msgText.includes("/developer")) {
+    bot.sendMessage(chatId, "I was developed by Sahil Arora");
+  } else if (msgText === "/fact") {
+    getWeatherFact().then((weatherFact) => {
+      if (weatherFact) {
+        bot.sendMessage(chatId, `Here is your fact:\n${weatherFact}`);
+      } else {
+        console.log("Failed to fetch a weather fact.");
+      }
+    });
+  } else if (msgText === "/choose_state") {
+    showStateKeyboard(chatId);
+  } else if (states.includes(msgText)) {
+    const state = msgText;
+    console.log("Received state command:", state);
+    selectedState = state
 
-    bot.sendMessage(
-      chatId,
-      "https://tse2.mm.bing.net/th?id=OIP.Nxdd_pAJVU7a-j49_WjAPQHaKF&pid=Api&P=0&w=300&h=300"
-    );
+    GiveWeatherDetails(chatId, selectedState);
+    // Handle the selected state accordingly
+  } else {
+    bot.sendMessage(chatId, "Nope");
   }
-  console.log(msg);
 });
 
-async function GiveWeatherDetails(chatId) {
+function showStateKeyboard(chatId) {
+  
+
+  const keyboard = {
+    keyboard: states.map((state) => [{ text: state }]),
+    one_time_keyboard: true,
+    resize_keyboard: true
+  };
+
+  bot.sendMessage(chatId, "Choose your state:", {
+    reply_markup: JSON.stringify(keyboard)
+  });
+}
+
+async function GiveWeatherDetails(chatId, state) {
   try {
     const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${weatherKey}&q=India&aqi=no`;
 
@@ -40,10 +73,41 @@ async function GiveWeatherDetails(chatId) {
     const weatherData = await response.json();
 
     const temperatureCelsius = weatherData.current.temp_c;
-    console.log(temperatureCelsius);
-    const weatherUpdate = `Today's temperature in New Delhi: ${temperatureCelsius}°C`;
+    const weatherUpdate = `Today's temperature in ${state} : ${temperatureCelsius}°C,
+    
+  emoji for u: ${await GetEmoji(
+      state
+    )}`;
     bot.sendMessage(chatId, weatherUpdate);
   } catch (error) {
     console.log(error);
   }
+}
+
+async function getWeatherFact() {
+  try {
+    const apiUrl =
+      "https://opentdb.com/api.php?amount=1&category=9&type=boolean";
+
+    const response = await fetch(apiUrl);
+    const data = await response.json();
+    if (data.results && data.results.length > 0) {
+      const generalFact = data.results[0].question;
+
+      if (generalFact.toLowerCase().includes("weather")) {
+        return generalFact;
+      }
+    }
+
+    return getWeatherFact();
+  } catch (error) {
+    console.error("Error fetching weather fact:", error.message);
+    return null;
+  }
+}
+
+async function GetEmoji(place) {
+  const weatherEmoji = new WeatherEmoji("19d99615dedd4a22f13aced248d8ee2c");
+  const emojiNewYork = await weatherEmoji.getWeather(place, true);
+  return emojiNewYork.emoji;
 }
