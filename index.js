@@ -10,10 +10,7 @@ let selectedState = "New Delhi";
 
 const connectToDatabase = async () => {
   try {
-    await mongoose.connect(process.env.MONGO_URI, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true,
-    });
+    await mongoose.connect(process.env.MONGO_URI);
     console.log("MongoDB connected successfully");
     // Start your server or perform other operations after the database connection is established.
   } catch (error) {
@@ -75,7 +72,7 @@ async function GetEmoji(place) {
 
 async function GiveWeatherDetails(chatId, state) {
   try {
-    const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${weatherKey}&q=India&aqi=no`;
+    const apiUrl = `http://api.weatherapi.com/v1/current.json?key=${weatherKey}&q=${state}&aqi=no`;
 
     const response = await fetch(apiUrl);
     const weatherData = await response.json();
