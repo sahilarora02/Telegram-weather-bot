@@ -124,6 +124,8 @@ bot.on("message", async (msg) => {
     showStateKeyboard(chatId);
   } else if (msgText.includes("/developer")) {
     bot.sendMessage(chatId, "I was developed by Sahil Arora");
+  } else if(msgText === '/unsubscribe'){
+
   } else if (msgText === "/fact") {
     getWeatherFact().then((weatherFact) => {
       if (weatherFact) {
@@ -145,6 +147,17 @@ bot.on("message", async (msg) => {
     GiveWeatherDetails(chatId, selectedState);
   } else {
     bot.sendMessage(chatId, "Nope");
+  }
+});
+bot.onText(/\/unsubscribe/i, async (msg) => {
+  const chatId = msg.chat.id;
+
+  try {
+    await User.findOneAndDelete({ userId: chatId });
+    bot.sendMessage(chatId, "You have unsubscribed from daily weather updates.");
+  } catch (error) {
+    console.error("Error unsubscribing:", error);
+    bot.sendMessage(chatId, "An error occurred while unsubscribing. Please try again later.");
   }
 });
 
