@@ -42,10 +42,10 @@ Xoxo Weather Bot is a Telegram bot that provides daily weather updates, interest
 
 # Commands
 - **/start:** Initialize the bot and get started.
-- **/subscribe:** Subscribe for daily weather updates.
+- **/current_temperature:** Get the current temperature..
 - **/developer:** Learn about the developer.
 - **/fact:** Receive an interesting weather-related fact.
-- **/choose_state:** Select your state for personalized weather updates.
+- **/daily_updates:** Subscribe for daily weather updates.
 
 # Contributing
 Contributions are welcome! Feel free to open issues, submit pull requests, or suggest new features. Follow the Contributing Guidelines for more details.
