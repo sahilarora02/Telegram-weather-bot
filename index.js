@@ -145,8 +145,6 @@ bot.on("message", async (msg) => {
     }
 
     GiveWeatherDetails(chatId, selectedState);
-  } else {
-    bot.sendMessage(chatId, "Nope");
   }
 });
 bot.onText(/\/unsubscribe/i, async (msg) => {
